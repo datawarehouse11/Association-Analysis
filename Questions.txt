@@ -1,0 +1,205 @@
+After importing the data with pandas, how do you view all the columns (also called exploring the dataset to see what 
+features exists)?
+- dataset.drop("1stColumnName: 0", axis=1).columns
+
+How would you go about performing multivaraiate analysis?
+- the data has multiple parameters (columns)/variables
+- the data contains both quantitative and qualitative parameters.
+- identify the parameters of interest. Remove the parameters unrelated to the analysis.
+ 
+How do you identify which parameters may be related?
+- find associations
+- you can start by speculating
+- based on the speculation, where you've compartmentalize the paramaters, 
+- plot a scatter plot - see if associations are linear
+- use seaborn's pairplot(dataset, vars["ColumnName", "ColumnName", "ColumnName", "ColumnName"])
+- select the associations most linear for further analysis
+- determine the degree and direction of those associations, by using covariance.
+
+Why use covariance?
+- covariance is a measure of how much two random variables change together. It helps measure the direction and strenght (degree) of the 
+  linear association between a pair of numeric variables.
+- "use covariance to assess the direction of the relationship but not its strength" 
+- when the covariance between two variables is positive, they tend to move in the same direction.
+  - that is, higher values of one variable tend to correspond with higher values of the other variable.
+  - e.g. time studying and grade
+- a negative covariance signifies that the variables move in opposite directions. 
+  - higher values of one variable tend to correspond with lower values of the other variable.
+  - e.g. rainfall and time spent outside
+
+True or false. Both covariance and correlation can be used to assess the direction of the linear relationship between variables.
+- True, correlation also tells us its strenght and is comparable across different units and datasets.
+- correlation standardies the results by providing values between -1 and 1 that do not depend on the data's scale.
+- covariance does not include standardization.
+
+How do you calculate covariance in python?
+- x.cov(y)
+- where x and y are data frame obejcts.
+ - e.g. cars["EngineSize"].cov(cars["MPG.city"])
+
+What does dataset.shape[0]-1 does in python?
+- ...
+
+How would you create the covariance matric among different parameters in a data set in python?
+- cars[["ColumnName","ColumnName","ColumnName","ColumnName"]].cov()
+
+Why can't use two covariance values to compare assumptions, directly?
+- covariance involves the use of the means of participating variables.
+- use correlation instead - which measures the strength and direction of the linear associations between two quantitative
+  variables.
+- correlation is normalized covariance and is generally obtained by dividing the covariance by the product of standard
+  deviation of the variables.
+
+how do you distinguish the correlation on a sample and a population?
+- for a sample the correlation would be represented by an italic lower letter "r"
+- for a population it would be the letter "p"
+
+How is the strenght of a linear association by using correlation determined ?
+- the closer r/p is to +1 the stronger the linear association - positive association
+- the closer r/p is to 0, then the variables might be statistically independent - no linear association.
+- if its less than 0, it signifies a negative association 
+
+What are the different types of correlation?
+- Pearson, Spearman, and Kendall
+
+How would you determine which of these correlation measurements to use?
+- the decision would be on the type of variable, the nature of its distribution and the monotocity of the association.
+
+How do you know when an association between two variables is monotonic?
+- when two variables x and y where y=f(x), if and only if the value of y is either entirely increasing or decreasing 
+  as x increases.
+
+Describe which correlation method would be best suited based on the ype of variable, the nature of its distribution and the monotocity of the association?
+Correlation	Type 				Normal Distribution	Should be monotonic
+Pearson: 	Interval or Ration		Mandatory		Not Mandatory
+Spearman:	Interval, Ordinal or Ratio	Not Mandatory		Mandatory
+Kendall:	Interval, Ordinal or Ratio	Not Mandatory		Mandatory
+ 
+Pearson Correlation
+When to use Peason Correlation?
+- on numeric variables pulled out of a distribution that is normally distributed.
+- These numeric variables have to be of the interval or ratio scale.
+
+What can the QQplot be used for as well?
+- to se if the underlying data is normally distributed. (statsmodels.api as sm; sm.qqplot(cars[]))
+- he Shapiro-Wilk test can also be used to determine normal distribution (scipy.stats import shapiro; shapiro(cars[]))
+
+What is the range of correlation?
+- -1 to + 1
+-  the closer to 1 suggest strong positve correlation, the opposite suggest strong negative correlation
+- closer to 0 suggest no correlation...
+
+When to use Spearman Correlation?
+- this is a rank based coeffiecient, where the variables need not be normally distributed. 
+- It is mandatory for these variables to be either in interval, ordinal, or ratio scale.
+- It is expected that the association between the variables is monotonic.
+
+When to use spearman correlation?
+- when the p-value is less than the chosen alpha-value/significance value (0.05) 
+
+What is the Kendall Tau Correlation?
+- its a rank based coefficient similiar to Spearman correlation, where the variabes need not be normally distributed. However, it is mandatory
+   for these variables to be either in interval, ordinal or ratio scale. In addition, it is expected that the association 
+   between the variables is monotonic.
+
+What are concordant pairs?
+What are discordant pairs?
+
+What factors of caution should be considered when computing correlation?
+- correlation is not the right measure for finding association for non-linear relationships. To determine if two variables may be linear related, 
+   a scatter plot can be used.
+- Pearson correlation can be affected by outliers. A box plot can be used to identify the presence of outliers. The effect of outliers isi minimal
+   for Spearman correlation, therefore, if outliers cannot be manipulated or eliminated from the analysis with proper justification, Spearman
+   correlation is preferred.
+- A coorelation value close to 0 indicates that the variables are not linearly associated, however these variables may still be related. Thus it is
+   advised to plot the data.
+- Correlation does not imply causation i.e. based on the value of correlation, it cannot be asserted that one varaible causes the other.
+
+Is covariance and correlation metrics appropriate for finding associations between categorical variables?
+- No
+
+How do we determine the relationship between two categorical variables?
+- by using a Two-way tables, then a Chi-squared test to determine the existence of an association on the two-way table.
+
+What tests would you perform on these variables based on their types?
+Outcome (Dependent), Predictor (Indepent)		Test?
+Categorical		Categorical		= Chi-squared
+Categorical		Numeric			= Logistic Regression
+Numeric			Categorical		= T test, ANOVA
+Numeric			Numeric			= Spearman Correlation, Linear regression
+
+Which of the following statements are TRUE about Chi-Squared Test for association between categorical and categorical variables? 
+- The chi-squared test is performed with the null hypothesis as the variables are independent
+- The null hypothesis is rejected when the obtained p-value is lesser than the chosen significance level
+
+How can the existence of the association between binary variables be determined?
+- by using the Phi coefficient
+- The Phi coefficient is determined using the two-way table between the binary variables. 
+- The two binary variables are said to be positively associated if most of the data fall along the diagonal.
+
+True or False:
+The Phi coefficient is also the Pearson correlation coefficient for two binary variables.
+- True
+
+What is market basket analysis?
+- What items are purchased most frequently.
+- which item(s) encourage customers to purchase additional items.
+- What are the associations between items.
+
+How can we determine the most frequent purhased item?
+- by drawing a frequency table
+- by drawing a bar plot
+
+From the frequency table we can see associations between purchased items. What meausure can we use to determine if these
+associations are of interest?
+- the support and confidence measure
+
+What is Support and Confidence?
+- it indicates how interesting an association rule is.
+- Support indicates the usefulness of the rule
+- Confidence indicates the certainty of the rule.
+-- For a given associaition x -> y, support indicates the fraction of transactions that contain both x and y. The confidence
+   indicates the fraction of transactions that contain both x and y among the transactions that contain x.
+
+Can the association rule be summarized using a Two-way table?
+- Yes
+
+What additional metrics can be used to determine whether association rules are sufficiently interesting enough?
+- additional metrics such as lift, conviction and leverage can be used.
+
+How is lift calculated?
+- For an association rule represented as x → y, Lift is calculated by the ratio of the confidence of the association and 
+  the number of transactions containing the rule consequent. Where x is the antecedent and y is the consequent of the rule.
+- This measure indicates the relationship between x and y by measuring their strength of the association.
+- that is, the confidence of the association rule (x -> y) over the support of y, where support(y) equals the number of 
+  transactions containing y over the total number of transactions.
+- Larger values of lift indicate stronger association because lift indicates the strength of association.
+  - if lift = 1, then x and y are said to be disassociated/statistically independent. The presence of x may have no influence of the presence of y 
+  - if lift >1, then and y are said to be positively associated i.e. the presence of x tends to indicate the presence of y.
+  - if lift < 1, then x and y are said to be negatively associated.
+
+What measurement would be convenient if you are looking for associations between large data sets, with a consinderable large
+number of items and transactions?
+- The Apriori technique
+
+What python module represents the apriori method?
+- mlxtend
+- we can use this method to mine association rules.
+
+Apriori Technique is used to determine frequent itemsets based on which of the following? 
+- Minimum support threshold 
+
+What did you learn in this course?
+•	Define multivariate, bivariate and association analysis.
+•	Select associations between variables based on a scatter plot.
+•	Compute the covariance between the two variables.
+•	Determine the Pearson, Spearman and Kendall correlation between two variables.
+•	Test the association between two categorical variables using the Chi-squared test.
+•	Find association rules in market basket analysis using support, confidence and lift.
+•	Determine association rules using the Apriori technique.
+
+
+
+
+
+
